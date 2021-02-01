@@ -1,13 +1,6 @@
-const refs = {
-  days: document.querySelector('span[data-value="days"]'),
-  hours: document.querySelector('span[data-value="hours"]'),
-  mins: document.querySelector('span[data-value="mins"]'),
-  secs: document.querySelector('span[data-value="secs"]'),
-};
-
 class CountdownTimer {
   constructor(selector, targetDate) {
-    this.selector = selector;
+    this.selector = document.querySelector(selector);
     this.targetDate = targetDate;
   }
 
@@ -29,10 +22,15 @@ class CountdownTimer {
     const mins = this.pad(Math.floor((time % (1000 * 60 * 60)) / (1000 * 60)));
     const secs = this.pad(Math.floor((time % (1000 * 60)) / 1000));
 
-    refs.days.textContent = days;
-    refs.hours.textContent = hours;
-    refs.mins.textContent = mins;
-    refs.secs.textContent = secs;
+    const refDays = this.selector.querySelector('span[data-value="days"]');
+    const refHours = this.selector.querySelector('span[data-value="hours"]');
+    const refMins = this.selector.querySelector('span[data-value="mins"]');
+    const refSecs = this.selector.querySelector('span[data-value="secs"]');
+
+    refDays.textContent = days;
+    refHours.textContent = hours;
+    refMins.textContent = mins;
+    refSecs.textContent = secs;
   }
 
   pad(value) {
