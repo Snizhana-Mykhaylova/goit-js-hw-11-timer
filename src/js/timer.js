@@ -5,13 +5,29 @@ class CountdownTimer {
   }
 
   start() {
+    // вызывает функцию upDateTimerFace перед setInterval чтобы обхитрить задержку 1000 мс))
+    if (localStorage['deltaTime']) {
+      const deltaTime = window.localStorage.getItem('deltaTime');
+      this.upDateTimerFace(deltaTime);
+    }
+
     setInterval(() => {
       const currentTime = Date.now();
       const targetTime = this.targetDate.getTime();
       const deltaTime = targetTime - currentTime;
 
+      // на случай если день Х наступил))
+      if (deltaTime <= 0) {
+        clearInterval(timeinterval);
+      }
+
       this.upDateTimerFace(deltaTime);
+      this.setInLocalStorage(deltaTime);
     }, 1000);
+  }
+
+  setInLocalStorage(deltaTime) {
+    localStorage.setItem('deltaTime', deltaTime);
   }
 
   upDateTimerFace(time) {
