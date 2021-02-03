@@ -2,6 +2,13 @@ class CountdownTimer {
   constructor(selector, targetDate) {
     this.selector = document.querySelector(selector);
     this.targetDate = targetDate;
+    this.interval = null;
+    this.refs = {
+      days: this.selector.querySelector('span[data-value="days"]'),
+      hours: this.selector.querySelector('span[data-value="hours"]'),
+      mins: this.selector.querySelector('span[data-value="mins"]'),
+      secs: this.selector.querySelector('span[data-value="secs"]'),
+    };
   }
 
   start() {
@@ -11,19 +18,27 @@ class CountdownTimer {
       this.upDateTimerFace(deltaTime);
     }
 
-    setInterval(() => {
+    this.interval = setInterval(() => {
       const currentTime = Date.now();
       const targetTime = this.targetDate.getTime();
       const deltaTime = targetTime - currentTime;
 
       // на случай если день Х наступил))
       if (deltaTime <= 0) {
-        clearInterval(timeinterval);
+        stopInterval();
       }
 
       this.upDateTimerFace(deltaTime);
       this.setInLocalStorage(deltaTime);
     }, 1000);
+  }
+
+  stopInterval() {
+    clearInterval(this.interval);
+    this.refs.days.textContent = '00';
+    this.refs.hours.textContent = '00';
+    this.refs.mins.textContent = '00';
+    this.refs.secs.textContent = '00';
   }
 
   setInLocalStorage(deltaTime) {
@@ -38,15 +53,10 @@ class CountdownTimer {
     const mins = this.pad(Math.floor((time % (1000 * 60 * 60)) / (1000 * 60)));
     const secs = this.pad(Math.floor((time % (1000 * 60)) / 1000));
 
-    const refDays = this.selector.querySelector('span[data-value="days"]');
-    const refHours = this.selector.querySelector('span[data-value="hours"]');
-    const refMins = this.selector.querySelector('span[data-value="mins"]');
-    const refSecs = this.selector.querySelector('span[data-value="secs"]');
-
-    refDays.textContent = days;
-    refHours.textContent = hours;
-    refMins.textContent = mins;
-    refSecs.textContent = secs;
+    this.refs.days.textContent = days;
+    this.refs.hours.textContent = hours;
+    this.refs.mins.textContent = mins;
+    this.refs.secs.textContent = secs;
   }
 
   pad(value) {
@@ -61,3 +71,4 @@ class CountdownTimer {
 const timer = new CountdownTimer('#timer-1', new Date('Jul 17, 2021'));
 
 timer.start();
+// setTimeout(() => timer.stopInterval(), 5000);
